@@ -42,7 +42,7 @@ public class Briefschreibung {
 	}
 	
 	private boolean connectToAdressService() {
-		int maxCount = 5;
+		int maxCount = 3;
 		int count = 0;
 		boolean connected = false;
 		while(!connected && count < maxCount) {
