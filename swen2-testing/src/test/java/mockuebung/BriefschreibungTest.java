@@ -24,7 +24,8 @@ public class BriefschreibungTest {
 	private GeoData geoData;
 	private String adresse = "Hummelbach 3\r\n78462 Konstanz";
 
-	//Spy anstatt Mock, damit vorhandene Funktionalität erhalten bleibt (z.B. Methode .getEMailAdress(...) für testEmailHeader())
+	// Spy anstatt Mock, damit vorhandene Funktionalität erhalten bleibt (z.B.
+	// Methode .getEMailAdress(...) für testEmailHeader())
 	@Spy
 	private AerzteService aerzteService;
 
@@ -46,13 +47,20 @@ public class BriefschreibungTest {
 
 		String[] resultLines = briefschreibung.emailHeader(arzt).split("\\r?\\n");
 
+		// ...dass der E-Mail-Header richtige Daten liefert
 		assertEquals(3, resultLines.length);
 		assertEquals("From: my.email@guhgel.de", resultLines[0]);
 		assertEquals("To: Franz.Kaiser@aerzteservice.de", resultLines[1]);
 		assertEquals("Subject: Arztbrief", resultLines[2]);
+
+		// ...dass beim E-Mail-Header keine Verbindung zum Aerzteservice
+		// aufgebaut wird
+		verify(aerzteService, never()).connect();
+
+		// ein paar weitere Tests:
 		verify(aerzteService, times(1)).getEMailAdress(arzt);
 		verify(aerzteService, never()).getGeoData(arzt);
-		verify(aerzteService, never()).connect();
+
 		verify(adressService, never());
 	}
 
@@ -67,19 +75,30 @@ public class BriefschreibungTest {
 
 		String[] resultLines = briefschreibung.briefHeader(arzt).split("\\r?\\n");
 
+		// ...dass der Brief-Header richtige Daten liefert
 		assertEquals(3, resultLines.length);
 		assertEquals("Franz Kaiser", resultLines[0]);
 		assertEquals("Hummelbach 3", resultLines[1]);
 		assertEquals("78462 Konstanz", resultLines[2]);
+
+		// ...dass die Aktionen connect - abrufen - disconnect in der richtigen
+		// Reihenfolge ausgeführt werden
 		InOrder orderAerzteservice = inOrder(aerzteService);
+		// ...dass beim Brief-Header eine Verbindung zum Aerzteservice aufbaut
+		// und diese auch wieder schließt.
 		orderAerzteservice.verify(aerzteService, times(1)).connect();
 		orderAerzteservice.verify(aerzteService, times(1)).getGeoData(arzt);
 		orderAerzteservice.verify(aerzteService, times(1)).disconnect();
-		verify(aerzteService, never()).getEMailAdress(arzt);
+
+		// ...dass die Aktionen connect - abrufen - disconnect in der richtigen
+		// Reihenfolge ausgeführt werden
 		InOrder orderAdressService = inOrder(adressService);
 		orderAdressService.verify(adressService, times(1)).connect(anyObject());
 		orderAdressService.verify(adressService, times(1)).getAdresse(geoData);
 		orderAdressService.verify(adressService, times(1)).disconnect();
+
+		// weitere Tests:
+		verify(aerzteService, never()).getEMailAdress(arzt);
 	}
 
 	@Test
@@ -93,7 +112,12 @@ public class BriefschreibungTest {
 
 		briefschreibung.briefHeader(arzt);
 
+		// ...dass bei einem falschen Host für den AdressService der
+		// Verbindungsaufbau insgesamt 3x versucht wird, bevor der
+		// Verbindungsaufbau abgebrochen wird.
 		verify(adressService, times(3)).connect(adressServiceUrl);
+		// Änderung von 5 auf 3 Versuche in
+		// Briefschreibung.connectToAdressService()
 
 	}
 
