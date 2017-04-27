@@ -20,18 +20,18 @@ import org.mockito.Spy;
 
 public class BriefschreibungTest {
 
-	Arzt arzt;
-	GeoData geoData;
-	String adresse = "Hummelbach 3\r\n78462 Konstanz";
+	private Arzt arzt;
+	private GeoData geoData;
+	private String adresse = "Hummelbach 3\r\n78462 Konstanz";
 
 	@Spy
-	AerzteService aerzteService;
+	private AerzteService aerzteService;
 
 	@Mock
-	AdressService adressService;
+	private AdressService adressService;
 
 	@InjectMocks
-	Briefschreibung briefschreibung;
+	private Briefschreibung briefschreibung;
 
 	@Before
 	public void setUp() throws Exception {
