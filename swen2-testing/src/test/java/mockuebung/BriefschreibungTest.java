@@ -113,11 +113,9 @@ public class BriefschreibungTest {
 		briefschreibung.briefHeader(arzt);
 
 		// ...dass bei einem falschen Host für den AdressService der
-		// Verbindungsaufbau insgesamt 3x versucht wird, bevor der
+		// Verbindungsaufbau insgesamt 5x versucht wird, bevor der
 		// Verbindungsaufbau abgebrochen wird.
-		verify(adressService, times(3)).connect(adressServiceUrl);
-		// Änderung von 5 auf 3 Versuche in
-		// Briefschreibung.connectToAdressService()
+		verify(adressService, times(5)).connect(adressServiceUrl);
 
 	}
 
