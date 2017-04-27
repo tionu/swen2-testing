@@ -102,7 +102,7 @@ public class BriefschreibungTest {
 	}
 
 	@Test
-	public void testAdressSerivceMax3ConnectAttempts() {
+	public void testAdressSerivceMaxConnectAttempts() {
 
 		String adressServiceUrl = "invalidPath";
 		briefschreibung.setAdressServiceHostUrl(adressServiceUrl);
