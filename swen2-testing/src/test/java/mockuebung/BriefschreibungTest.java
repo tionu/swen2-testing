@@ -24,6 +24,7 @@ public class BriefschreibungTest {
 	private GeoData geoData;
 	private String adresse = "Hummelbach 3\r\n78462 Konstanz";
 
+	//Spy anstatt Mock, damit vorhandene Funktionalität erhalten bleibt (z.B. Methode .getEMailAdress(...) für testEmailHeader())
 	@Spy
 	private AerzteService aerzteService;
 
